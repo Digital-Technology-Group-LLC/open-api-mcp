@@ -385,35 +385,87 @@ EMBEDDING_MODEL=all-mpnet-base-v2
 
 ## IDE Integration
 
-The MCP server can be integrated with various IDE AI assistants:
+The MCP server exposes a REST API that can be integrated with AI coding assistants. Here are the integration options:
 
-### VS Code Copilot
+### Option 1: Direct API Integration
 
-Add to your project's `.vscode/settings.json`:
+Use the REST API directly in your custom tools or scripts:
 
+**Endpoint:** `http://localhost:8888/query`  
+**Method:** `POST`  
+**Body:**
 ```json
 {
-  "github.copilot.advanced": {
-    "contextProviders": {
-      "openapi": {
-        "url": "http://localhost:8888/query",
-        "enabled": true
-      }
-    }
-  }
+  "query": "How do I authenticate?",
+  "k": 3
 }
 ```
 
-### Cursor IDE
+**Response:**
+```json
+{
+  "query": "How do I authenticate?",
+  "results": [...],
+  "count": 3
+}
+```
 
-Configure in Cursor settings to use the MCP server endpoint for API context retrieval.
+### Option 2: MCP Client Integration
 
-### Generic Integration
+This server implements the Model Context Protocol (MCP). To use it with MCP-compatible clients:
 
-Any IDE that supports REST API context providers can use:
-- Endpoint: `http://localhost:8888/query`
-- Method: `POST`
-- Body: `{"query": "<user-question>", "k": 3}`
+1. The server runs at `http://localhost:8888`
+2. Use the `/query` endpoint for context retrieval
+3. Query results include relevant API documentation with metadata
+
+### Option 3: Custom IDE Extension
+
+Build a custom extension for your IDE that:
+1. Calls the `/query` endpoint with the user's question
+2. Parses the returned `results` array
+3. Injects the context into your AI assistant's prompt
+
+**Example Python integration:**
+```python
+import requests
+
+def get_api_context(question: str, num_results: int = 3) -> list:
+    """Retrieve relevant API documentation for a question."""
+    response = requests.post(
+        "http://localhost:8888/query",
+        json={"query": question, "k": num_results}
+    )
+    return response.json()["results"]
+
+# Usage
+context = get_api_context("How to create a user?")
+for result in context:
+    print(f"Endpoint: {result['metadata']['endpoint']}")
+    print(f"Content: {result['content']}\n")
+```
+
+### Integration with GitHub Copilot / Cursor
+
+**Note:** As of now, GitHub Copilot and Cursor don't have built-in support for external MCP servers through configuration files. 
+
+To use this with Copilot or Cursor, you would need to:
+1. Copy relevant context from query results manually
+2. Use the API in a separate tool to fetch context
+3. Create a custom extension that integrates with the editor
+
+**Future Integration:** Watch for updates to GitHub Copilot's extensibility features that may support external context providers.
+
+### Testing the API
+
+```bash
+# Test query
+curl -X POST http://localhost:8888/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "authentication endpoints", "k": 3}'
+
+# Check health
+curl http://localhost:8888/health
+```
 
 ## Development
 
