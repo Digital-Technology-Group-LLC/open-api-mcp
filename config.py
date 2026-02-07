@@ -18,7 +18,7 @@ API_SPECS_DIR = Path(os.getenv("API_SPECS_DIR", "./api_specs"))
 
 # MCP Server configuration
 MCP_HOST = os.getenv("MCP_HOST", "127.0.0.1")
-MCP_PORT = int(os.getenv("MCP_PORT", "8000"))
+MCP_PORT = int(os.getenv("MCP_PORT", "8888"))
 
 # Ensure directories exist
 VECTOR_STORE_PATH.mkdir(parents=True, exist_ok=True)
