@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# Vector store (will be mounted)
+vector_store/
+
+# Logs
+*.log
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Beads
+.beads/
+
+# Documentation
+*.md
+!README.md
+
+# Environment
+.env
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

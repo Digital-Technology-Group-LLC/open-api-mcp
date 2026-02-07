@@ -133,6 +133,8 @@ python query.py "Show me pagination parameters"
 
 ### 8. Start MCP Server
 
+#### Option A: Run Locally
+
 Launch the FastAPI server for IDE integration:
 
 ```bash
@@ -142,6 +144,48 @@ python server.py
 Server will be available at `http://127.0.0.1:8888`
 
 Check the logs in `server.log` for debugging.
+
+#### Option B: Run with Docker (Recommended)
+
+Using Docker provides easier server lifecycle management without background processes.
+
+**Build and start the server:**
+```bash
+docker-compose up -d
+```
+
+**View logs:**
+```bash
+docker-compose logs -f
+```
+
+**Stop the server:**
+```bash
+docker-compose down
+```
+
+**Restart the server:**
+```bash
+docker-compose restart
+```
+
+**Check server status:**
+```bash
+docker-compose ps
+curl http://localhost:8888/health
+```
+
+The Docker setup automatically:
+- Mounts `vector_store/` and `api_specs/` for persistence
+- Exposes the server on port 8888
+- Includes health checks
+- Restarts on failure
+- Logs to `server.log`
+
+**To run ingestion in the container:**
+```bash
+docker-compose exec openapi-mcp-server python ingest.py
+```
 
 ## Usage
 
