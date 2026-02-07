@@ -65,3 +65,6 @@
 # - linear.api-key
 # - github.org
 # - github.repo
+
+git:
+  author: "Alex Arnold <701987+ajarnold87@users.noreply.github.com>"
