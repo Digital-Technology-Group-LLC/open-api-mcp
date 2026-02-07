@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 from typing import List, Dict, Any
 
-from langchain.docstore.document import Document
+from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
@@ -116,13 +116,15 @@ def create_endpoint_document(
     content = "\n".join(content_parts)
     
     # Create metadata for filtering and retrieval
+    # Note: ChromaDB only supports str, int, float, bool, or None for metadata values
+    tags = operation.get('tags', [])
     metadata = {
         'path': path,
         'method': method.upper(),
         'operation_id': operation_id,
         'api_title': spec_info.get('title', ''),
         'api_version': spec_info.get('version', ''),
-        'tags': operation.get('tags', []),
+        'tags': ', '.join(tags) if tags else '',  # Convert list to comma-separated string
         'source': 'openapi_spec'
     }
     
